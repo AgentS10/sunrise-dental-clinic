@@ -162,6 +162,36 @@ classDiagram
         +generate(from, to) ReportResult
     }
 
+    class StaffNotice {
+        -Long id
+        -String message
+        -boolean urgent
+        -LocalDateTime createdAt
+    }
+
+    class StaffNotification {
+        -Long id
+        -String message
+        -String appointmentNumber
+        -LocalDateTime createdAt
+    }
+
+    class StaffNotificationObserver {
+        +onAppointmentRegistered(appointment) void
+        +onAppointmentCancelled(appointment) void
+    }
+
+    class StaffNoticeService {
+        +post(authorUsername, message, urgent) StaffNotice
+        +recent() List~StaffNotice~
+    }
+
+    class SettingsService {
+        +addDentist(request) Dentist
+        +toggleDentistActive(id) Dentist
+        +addTreatmentType(request) TreatmentType
+    }
+
     %% ===== Core domain relationships =====
     User "1" --> "0..*" Appointment : creates
     Patient "1" o-- "0..*" Appointment : has
@@ -191,3 +221,11 @@ classDiagram
     %% ===== Reporting (Factory Method) =====
     ClinicFacade --> ReportFactory
     ReportFactory "1" --> "0..*" Report
+
+    %% ===== Staff communication (added post-review) =====
+    User "1" --> "0..*" StaffNotice : posts
+    StaffNoticeService --> StaffNotice
+    StaffNotificationObserver ..|> AppointmentObserver
+    StaffNotificationObserver --> StaffNotification : creates
+    SettingsService --> Dentist
+    SettingsService --> TreatmentType

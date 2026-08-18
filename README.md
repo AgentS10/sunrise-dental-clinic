@@ -17,6 +17,7 @@ git clone https://github.com/AgentS10/sunrise-dental-clinic.git
 ## Contents
 
 - [Functionality → brief mapping](#functionality--brief-mapping)
+- [Comparative analysis](#comparative-analysis)
 - [Architecture](#architecture)
 - [Design patterns implemented](#design-patterns-implemented)
 - [Running the application](#running-the-application)
@@ -37,6 +38,23 @@ git clone https://github.com/AgentS10/sunrise-dental-clinic.git
 | 5 | Help Section | `/help` — step-by-step guide for new staff. |
 | 6 | Exit System | Logout (session invalidated, CSRF-protected POST). |
 | *extra* | Reports | `/reports` (admin-only) — Daily Appointments, Revenue, and Dentist Workload reports over a date range. |
+| *extra* | Staff communication | `/notices` — an internal noticeboard so staff can coordinate with each other (shift handovers, reminders), plus a live notification bell (top-right on every page) showing recent clinic activity. See [Comparative analysis](#comparative-analysis) below for why this was added. |
+| *extra* | Settings | `/settings` (admin-only) — manage dentists and treatment types without editing code/restarting the app. |
+| *extra* | Cancel appointment | `/appointments/{number}/cancel` — CSRF-protected, confirmed, notifies staff via the bell. |
+
+## Comparative analysis
+
+Real dental practice management platforms (Open Dental, Dentrix Ascend, CareStack, Curve
+Dental, iDental Soft) were reviewed to sanity-check this system's feature set against what a
+working clinic actually expects — full detail and citations are in the assessment report's
+Task B comparative analysis section. In short: internal staff coordination and a live
+activity feed (found in iDental Soft and Dental Intelligence) and admin-configurable clinic
+settings without a redeploy (standard in every platform reviewed) were both missing from the
+brief's literal functionality list but are expected in a real system, so they were added. A
+"remember me" login option was added to match the persistent-session pattern most of these
+platforms use; two-factor authentication (offered by Curve Dental, absent from Open Dental)
+was deliberately **not** added — it needs an SMS/authenticator provider this environment
+doesn't have, so it's documented as a known gap rather than faked.
 
 **Design assumptions** (per the brief's invitation to make reasonable assumptions):
 - Patients are registered **once** and reused across visits (matched by contact number), rather
@@ -46,6 +64,10 @@ git clone https://github.com/AgentS10/sunrise-dental-clinic.git
   table) since no real gateway credentials are available in this environment — the `Observer`
   pattern used means swapping in a real gateway (Twilio, JavaMail) is a one-class change.
 - Returning patients with 3+ completed visits receive a 10% loyalty discount on the treatment fee.
+- The notification bell shows the clinic's most recent activity to *every* logged-in staff
+  member rather than tracking per-user read/unread state (which would need a join table keyed
+  by staff account) — a reasonable simplification for a small front-desk team sharing one
+  system, noted as a natural next step for a larger deployment.
 
 ## Architecture
 
@@ -86,7 +108,7 @@ sharing the same service/data layer — the API can be consumed by any external 
 | **Strategy** | [`BillingStrategy`](src/main/java/lk/icbt/dentalclinic/service/pattern/BillingStrategy.java) + `StandardBillingStrategy` + `ReturningPatientDiscountStrategy` | Interchangeable pricing algorithms without `if/else` chains in the billing service; new pricing rules plug in as new classes. |
 | **Factory** | [`BillingStrategyFactory`](src/main/java/lk/icbt/dentalclinic/service/pattern/BillingStrategyFactory.java) | Selects the correct billing strategy at runtime based on patient visit history. |
 | **Factory Method** | [`ReportFactory`](src/main/java/lk/icbt/dentalclinic/service/pattern/ReportFactory.java) + `Report` interface | Report generation (Daily Appointments / Revenue / Dentist Workload) is requested by type, hiding which concrete report class is built. |
-| **Observer** | [`AppointmentEventPublisher`](src/main/java/lk/icbt/dentalclinic/service/pattern/AppointmentEventPublisher.java) + `NotificationObserver` + `AuditLogObserver` | Decouples "an appointment was booked" from "what happens next" (simulated SMS, audit log) — new reactions plug in without touching `AppointmentService`. |
+| **Observer** | [`AppointmentEventPublisher`](src/main/java/lk/icbt/dentalclinic/service/pattern/AppointmentEventPublisher.java) + `NotificationObserver` + `AuditLogObserver` + [`StaffNotificationObserver`](src/main/java/lk/icbt/dentalclinic/service/pattern/StaffNotificationObserver.java) | Decouples "an appointment was booked/cancelled" from "what happens next" (simulated SMS, audit log, staff bell notification) — a third observer was added later for the notification bell with **zero changes** to `AppointmentService` or the other two observers, exactly demonstrating the pattern's extensibility. |
 | **Builder** | [`BillBuilder`](src/main/java/lk/icbt/dentalclinic/service/pattern/BillBuilder.java) | Fluent, validated assembly of a `Bill` (derives the bill number, timestamps it) instead of a large telescoping constructor. |
 | **Facade** | [`ClinicFacade`](src/main/java/lk/icbt/dentalclinic/service/ClinicFacade.java) | Single simplified entry point over five collaborating services/repositories, keeping the presentation-layer controllers thin. |
 | **DAO / Repository** | `repository/*Repository` (Spring Data JPA) | Standard data-access abstraction over the H2 database. |
@@ -165,13 +187,13 @@ responding with JSON). A sample:
 
 ```
 src/main/java/lk/icbt/dentalclinic/
-├── domain/            JPA entities
+├── domain/            JPA entities (incl. StaffNotice, StaffNotification)
 ├── repository/         Spring Data JPA repositories
-├── service/            Business logic + ClinicFacade
+├── service/            Business logic + ClinicFacade, StaffNoticeService, SettingsService
 ├── service/pattern/     Design pattern implementations
 ├── security/            Spring Security UserDetailsService
 ├── config/              Security config, data seeder
-├── web/                 Thymeleaf MVC controllers
+├── web/                 Thymeleaf MVC controllers (incl. Settings, Noticeboard, nav bell)
 ├── api/                 REST controllers + error handling
 ├── dto/                 Request/response DTOs
 └── exception/           Domain exceptions

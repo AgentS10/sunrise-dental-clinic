@@ -145,6 +145,56 @@ const OUT = path.join(__dirname, 'screenshots');
     await page.click('input[type=checkbox]').catch(() => {});
     await shot('20-rest-api-bill-json.png');
 
+    // 12. Staff Noticeboard - internal staff-to-staff communication (still logged in as reception)
+    await page.goto(`${BASE}/notices`);
+    await page.fill('#message', 'Dr. Nimal Perera is on leave tomorrow afternoon - please avoid booking new slots after 1pm.');
+    await page.check('input[name=urgent]');
+    await page.click('button:has-text("Post Notice")');
+    await page.waitForLoadState('networkidle');
+    await shot('23-staff-noticeboard.png');
+
+    // 13. Notification bell dropdown (live activity feed, populated by the
+    // StaffNotificationObserver every time an appointment is booked/cancelled)
+    await page.click('.notif-bell summary');
+    await page.waitForTimeout(200);
+    await shot('24-notification-bell.png');
+
+    // 14. Register a second appointment, then cancel it, to demonstrate the
+    // cancellation flow and its resulting staff notification
+    await page.goto(`${BASE}/appointments/new`);
+    await page.fill('#patientName', 'Chamari Fernando');
+    await page.fill('#address', 'Colombo 05');
+    await page.fill('#contactNumber', '0765554433');
+    await page.selectOption('#dentistId', { index: 2 });
+    await page.selectOption('#treatmentTypeId', { index: 2 });
+    await page.fill('#appointmentDate', futureDate);
+    await page.fill('#appointmentTime', '14:00');
+    await page.click('#btnSaveAppointment');
+    await page.waitForLoadState('networkidle');
+    page.once('dialog', d => d.accept());
+    await page.click('button:has-text("Cancel Appointment")');
+    await page.waitForLoadState('networkidle');
+    await shot('25-appointment-cancelled.png');
+
+    // 15. Settings (admin only) - log back in as admin
+    await page.goto(`${BASE}/dashboard`);
+    await page.click('#btnLogout');
+    await page.waitForLoadState('networkidle');
+    await page.fill('#username', 'admin');
+    await page.fill('#password', 'Admin@123');
+    await page.click('button[type=submit]');
+    await page.waitForLoadState('networkidle');
+
+    await page.goto(`${BASE}/settings`);
+    await shot('26-settings-page.png');
+
+    await page.fill('#dName', 'Dr. Isuru Bandara');
+    await page.fill('#dSpec', 'Pediatric Dentistry');
+    await page.fill('#dContact', '0771230000');
+    await page.click('button:has-text("Add Dentist")');
+    await page.waitForLoadState('networkidle');
+    await shot('27-settings-dentist-added.png');
+
     await browser.close();
     console.log('All screenshots captured to', OUT);
 })();
