@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Staff Noticeboard - Sunrise Dental Clinic</title>
+    <th:block th:replace="~{fragments/nav :: favicon}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments/nav :: topbar}"></div>
+<div class="container">
+    <div class="page-header">
+        <h1>Staff Noticeboard</h1>
+        <p>Internal messages between clinic staff &mdash; shift handovers, reminders, and coordination notes.</p>
+    </div>
+
+    <div class="card">
+        <form th:action="@{/notices}" th:object="${request}" method="post">
+            <div class="field">
+                <label for="message">Post a notice</label>
+                <textarea id="message" th:field="*{message}" rows="2" placeholder="e.g. Dr. Perera is on leave tomorrow afternoon"
+                          th:classappend="${#fields.hasErrors('message')} ? 'has-error'"></textarea>
+                <div class="error-text" th:if="${#fields.hasErrors('message')}" th:errors="*{message}"></div>
+            </div>
+            <label style="display:flex; align-items:center; gap:8px; font-weight:500; margin-bottom:14px; cursor:pointer;">
+                <input type="checkbox" th:field="*{urgent}" style="width:auto"/> Mark as urgent
+            </label>
+            <button type="submit" class="btn btn-primary">Post Notice</button>
+        </form>
+    </div>
+
+    <div class="card" th:each="notice : ${notices}"
+         th:style="${notice.urgent} ? 'border-left:4px solid var(--error-fg)' : ''">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
+            <div>
+                <span class="badge" th:if="${notice.urgent}" style="background:var(--error-bg); color:var(--error-fg); margin-bottom:8px;">URGENT</span>
+                <p style="margin:0 0 8px; white-space:pre-wrap;" th:text="${notice.message}"></p>
+                <p style="margin:0; font-size:0.8rem; color:var(--muted)">
+                    <strong th:text="${notice.author.fullName}"></strong> &middot;
+                    <span th:text="${#temporals.format(notice.createdAt, 'dd MMM yyyy HH:mm')}"></span>
+                </p>
+            </div>
+            <form sec:authorize="hasRole('ADMIN')" th:action="@{/notices/{id}/delete(id=${notice.id})}" method="post"
+                  onsubmit="return confirm('Delete this notice?');">
+                <button type="submit" class="btn btn-secondary" style="padding:4px 10px; font-size:0.78rem;">Delete</button>
+            </form>
+        </div>
+    </div>
+
+    <p th:if="${notices.isEmpty()}" style="color:var(--muted)">No notices yet. Be the first to post one.</p>
+</div>
+</body>
+</html>
