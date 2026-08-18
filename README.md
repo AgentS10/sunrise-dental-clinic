@@ -1,12 +1,18 @@
 # Sunrise Dental Clinic — Appointment & Patient Management System
 
-[![CI](https://github.com/REPLACE_ME/sunrise-dental-clinic/actions/workflows/ci.yml/badge.svg)](https://github.com/REPLACE_ME/sunrise-dental-clinic/actions/workflows/ci.yml)
+[![CI](https://github.com/AgentS10/sunrise-dental-clinic/actions/workflows/ci.yml/badge.svg)](https://github.com/AgentS10/sunrise-dental-clinic/actions/workflows/ci.yml)
 
 A distributed, three-tier Java web application built for **CIS6003 Advanced Programming**
 (Cardiff Metropolitan University), implementing the Sunrise Dental Clinic scenario from the
 assessment brief: a computerised replacement for the clinic's paper-based appointment book.
 
 > Built with Java 17, Spring Boot 3, Spring Security, Spring Data JPA, Thymeleaf, and H2.
+
+**Repository:** https://github.com/AgentS10/sunrise-dental-clinic
+
+```bash
+git clone https://github.com/AgentS10/sunrise-dental-clinic.git
+```
 
 ## Contents
 
