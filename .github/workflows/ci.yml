@@ -1,0 +1,53 @@
+name: CI
+
+# Task D: demonstrates a CI workflow deployed with the Git repository. Every
+# push and pull request triggers a clean build and the full JUnit/Mockito/
+# Spring Boot Test suite, giving automated test-driven verification on every
+# version pushed - not just a manual "it works on my machine" check.
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: Build & Test (Java 17)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build with Maven
+        run: mvn -B -ntp clean compile
+
+      - name: Run unit and integration tests
+        run: mvn -B -ntp test
+
+      - name: Publish test summary
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: JUnit results
+          path: target/surefire-reports/*.xml
+          reporter: java-junit
+          fail-on-error: false
+
+      - name: Package application (skip tests, already run)
+        run: mvn -B -ntp package -DskipTests
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sunrise-dental-clinic-jar
+          path: target/sunrise-dental-clinic.jar
+          retention-days: 14
