@@ -1,0 +1,52 @@
+sequenceDiagram
+    actor R as Receptionist
+    participant UI as AppointmentWebController
+    participant F as ClinicFacade
+    participant BS as BillingService
+    participant AS as AppointmentService
+    participant SF as BillingStrategyFactory
+    participant Strat as BillingStrategy
+    participant Bld as BillBuilder«Builder»
+    participant Repo as BillRepository
+
+    R->>UI: click "Calculate & Print Bill"
+    activate UI
+    UI->>F: billFor(appointmentNumber)
+    activate F
+    F->>BS: getByAppointmentNumber(appointmentNumber)
+    activate BS
+
+    alt bill already generated
+        BS-->>F: existing Bill
+    else first time billing this appointment
+        BS->>AS: findByAppointmentNumber(appointmentNumber)
+        activate AS
+        AS-->>BS: Appointment
+        BS->>AS: countCompletedForPatient(patientId)
+        AS-->>BS: completedVisitCount
+        deactivate AS
+        BS->>SF: resolve(completedVisitCount)
+        activate SF
+        SF-->>BS: BillingStrategy (chosen at runtime)
+        deactivate SF
+        BS->>Strat: calculate(consultationFee, treatmentType, completedVisitCount)
+        activate Strat
+        Strat-->>BS: BillingResult
+        deactivate Strat
+        BS->>Bld: newBill().forAppointment(a).fromPricing(result).build()
+        activate Bld
+        Bld-->>BS: Bill
+        deactivate Bld
+        BS->>Repo: save(bill)
+        activate Repo
+        Repo-->>BS: Bill (persisted)
+        deactivate Repo
+        BS->>AS: markCompleted(appointmentNumber)
+    end
+
+    BS-->>F: Bill
+    deactivate BS
+    F-->>UI: BillResponse
+    deactivate F
+    UI-->>R: render printable receipt
+    deactivate UI

@@ -1,0 +1,29 @@
+sequenceDiagram
+    actor R as Receptionist
+    participant UI as AppointmentWebController
+    participant F as ClinicFacade
+    participant AS as AppointmentService
+    participant Repo as AppointmentRepository
+
+    R->>UI: enter appointment number, submit search
+    activate UI
+    UI->>F: findAppointment(appointmentNumber)
+    activate F
+    F->>AS: findByAppointmentNumber(appointmentNumber)
+    activate AS
+    AS->>Repo: findByAppointmentNumber(appointmentNumber)
+    activate Repo
+    Repo-->>AS: Appointment or Optional.empty()
+    deactivate Repo
+
+    alt appointment exists
+        AS-->>F: Appointment
+        F-->>UI: AppointmentResponse
+        UI-->>R: render appointment detail page
+    else no matching appointment
+        AS-->>UI: throw AppointmentNotFoundException
+        UI-->>R: render "not found" message on search page
+    end
+    deactivate AS
+    deactivate F
+    deactivate UI

@@ -1,0 +1,193 @@
+classDiagram
+    direction LR
+
+    class Role {
+        <<enumeration>>
+        ADMIN
+        RECEPTIONIST
+    }
+
+    class AppointmentStatus {
+        <<enumeration>>
+        SCHEDULED
+        COMPLETED
+        CANCELLED
+    }
+
+    class User {
+        -Long id
+        -String username
+        -String password
+        -String fullName
+        -Role role
+        -boolean enabled
+    }
+
+    class Patient {
+        -Long id
+        -String name
+        -String address
+        -String contactNumber
+        +getAppointments() List~Appointment~
+    }
+
+    class Dentist {
+        -Long id
+        -String name
+        -String specialization
+        -String contactNumber
+        -boolean active
+    }
+
+    class TreatmentType {
+        -Long id
+        -String name
+        -String description
+        -BigDecimal fee
+        -int estimatedDurationMinutes
+    }
+
+    class Appointment {
+        -Long id
+        -String appointmentNumber
+        -LocalDate appointmentDate
+        -LocalTime appointmentTime
+        -AppointmentStatus status
+        -String notes
+        -LocalDateTime createdAt
+    }
+
+    class Bill {
+        -Long id
+        -String billNumber
+        -BigDecimal consultationFee
+        -BigDecimal treatmentFee
+        -BigDecimal discountAmount
+        -BigDecimal totalAmount
+        -String pricingStrategyUsed
+        -LocalDateTime generatedAt
+    }
+
+    class Notification {
+        -Long id
+        -String appointmentNumber
+        -String channel
+        -String message
+        -LocalDateTime sentAt
+    }
+
+    class ClinicFacade {
+        +registerAppointment(request) AppointmentResponse
+        +findAppointment(number) AppointmentResponse
+        +billFor(number) BillResponse
+        +report(type, from, to) ReportResult
+    }
+
+    class AppointmentService {
+        -AppointmentRepository appointmentRepository
+        -PatientService patientService
+        -AppointmentEventPublisher eventPublisher
+        +register(request) Appointment
+        +findByAppointmentNumber(number) Appointment
+        -validateBusinessRules(request) void
+    }
+
+    class BillingService {
+        -BillingStrategyFactory billingStrategyFactory
+        +generateBill(number) Bill
+        +getByAppointmentNumber(number) Bill
+    }
+
+    class AppointmentNumberGenerator {
+        <<Singleton>>
+        -AppointmentNumberGenerator INSTANCE
+        -AtomicLong sequence
+        +getInstance() AppointmentNumberGenerator
+        +nextAppointmentNumber() String
+    }
+
+    class BillingStrategy {
+        <<interface>>
+        +appliesTo(count) boolean
+        +calculate(fee, treatment, count) BillingResult
+    }
+
+    class StandardBillingStrategy {
+        +calculate(fee, treatment, count) BillingResult
+    }
+
+    class ReturningPatientDiscountStrategy {
+        -int LOYALTY_THRESHOLD
+        +calculate(fee, treatment, count) BillingResult
+    }
+
+    class BillingStrategyFactory {
+        -List~BillingStrategy~ strategies
+        +resolve(count) BillingStrategy
+    }
+
+    class BillBuilder {
+        <<Builder>>
+        +forAppointment(appointment) BillBuilder
+        +fromPricing(result) BillBuilder
+        +build() Bill
+    }
+
+    class AppointmentObserver {
+        <<interface>>
+        +onAppointmentRegistered(appointment) void
+    }
+
+    class NotificationObserver {
+        +onAppointmentRegistered(appointment) void
+    }
+
+    class AuditLogObserver {
+        +onAppointmentRegistered(appointment) void
+    }
+
+    class AppointmentEventPublisher {
+        -List~AppointmentObserver~ observers
+        +publishAppointmentRegistered(appointment) void
+    }
+
+    class ReportFactory {
+        -Map~ReportType, Report~ reportsByType
+        +createReport(type) Report
+    }
+
+    class Report {
+        <<interface>>
+        +type() ReportType
+        +generate(from, to) ReportResult
+    }
+
+    %% ===== Core domain relationships =====
+    User "1" --> "0..*" Appointment : creates
+    Patient "1" o-- "0..*" Appointment : has
+    Dentist "1" o-- "0..*" Appointment : attends
+    TreatmentType "1" --> "0..*" Appointment : classifies
+    Appointment "1" *-- "0..1" Bill : generates
+    User --> Role
+    Appointment --> AppointmentStatus
+
+    %% ===== Service / facade layer =====
+    ClinicFacade --> AppointmentService
+    ClinicFacade --> BillingService
+    AppointmentService --> AppointmentNumberGenerator : uses
+    AppointmentService --> AppointmentEventPublisher : publishes to
+    AppointmentEventPublisher "1" --> "0..*" AppointmentObserver
+    NotificationObserver ..|> AppointmentObserver
+    AuditLogObserver ..|> AppointmentObserver
+    NotificationObserver --> Notification : creates
+
+    %% ===== Billing (Strategy + Builder) =====
+    BillingService --> BillingStrategyFactory
+    BillingStrategyFactory "1" --> "0..*" BillingStrategy
+    StandardBillingStrategy ..|> BillingStrategy
+    ReturningPatientDiscountStrategy ..|> BillingStrategy
+    BillingService --> BillBuilder : uses
+
+    %% ===== Reporting (Factory Method) =====
+    ClinicFacade --> ReportFactory
+    ReportFactory "1" --> "0..*" Report

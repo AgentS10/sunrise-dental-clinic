@@ -1,0 +1,50 @@
+sequenceDiagram
+    actor R as Receptionist
+    participant UI as AppointmentWebController
+    participant F as ClinicFacade
+    participant AS as AppointmentService
+    participant PS as PatientService
+    participant Gen as AppointmentNumberGenerator«Singleton»
+    participant Repo as AppointmentRepository
+    participant Pub as AppointmentEventPublisher
+    participant Obs as NotificationObserver
+
+    R->>UI: submit appointment form
+    activate UI
+    UI->>F: registerAppointment(request)
+    activate F
+    F->>AS: register(request)
+    activate AS
+    AS->>AS: validateBusinessRules(request)
+
+    alt dentist already booked at that time
+        AS-->>F: throw DoubleBookingException
+        F-->>UI: exception propagated
+        UI-->>R: re-display form with error message
+    else slot is available
+        AS->>PS: findOrRegister(name, address, contact)
+        activate PS
+        PS-->>AS: Patient
+        deactivate PS
+        AS->>Gen: nextAppointmentNumber()
+        activate Gen
+        Gen-->>AS: "APT-000001"
+        deactivate Gen
+        AS->>Repo: save(appointment)
+        activate Repo
+        Repo-->>AS: Appointment (persisted)
+        deactivate Repo
+        AS->>Pub: publishAppointmentRegistered(appointment)
+        activate Pub
+        Pub->>Obs: onAppointmentRegistered(appointment)
+        activate Obs
+        Obs-->>Pub: notification saved
+        deactivate Obs
+        deactivate Pub
+        AS-->>F: Appointment
+        deactivate AS
+        F-->>UI: AppointmentResponse
+        deactivate F
+        UI-->>R: redirect to appointment detail page
+        deactivate UI
+    end
