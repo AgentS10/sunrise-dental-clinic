@@ -40,4 +40,15 @@ public class AppointmentEventPublisher {
             }
         }
     }
+
+    public void publishAppointmentCancelled(Appointment appointment) {
+        for (AppointmentObserver observer : observers) {
+            try {
+                observer.onAppointmentCancelled(appointment);
+            } catch (Exception ex) {
+                log.warn("Observer {} failed on cancellation for appointment {}: {}",
+                        observer.getClass().getSimpleName(), appointment.getAppointmentNumber(), ex.getMessage());
+            }
+        }
+    }
 }

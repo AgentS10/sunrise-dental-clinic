@@ -90,6 +90,14 @@ public class AppointmentWebController {
         return "redirect:/appointments/" + appointmentNumber + "/bill";
     }
 
+    @PostMapping("/{appointmentNumber}/cancel")
+    public String cancel(@PathVariable String appointmentNumber, RedirectAttributes redirectAttributes) {
+        clinicFacade.cancelAppointment(appointmentNumber);
+        redirectAttributes.addFlashAttribute("successMessage",
+                "Appointment " + appointmentNumber + " has been cancelled. The clinic team has been notified.");
+        return "redirect:/appointments/" + appointmentNumber;
+    }
+
     @GetMapping("/{appointmentNumber}/bill")
     public String viewBill(@PathVariable String appointmentNumber, Model model) {
         AppointmentResponse appointment = clinicFacade.findAppointment(appointmentNumber);

@@ -71,6 +71,12 @@ public class ClinicFacade {
         return appointmentService.findByDate(date).stream().map(AppointmentResponse::from).toList();
     }
 
+    @Transactional
+    public AppointmentResponse cancelAppointment(String appointmentNumber) {
+        Appointment appointment = appointmentService.cancel(appointmentNumber);
+        return AppointmentResponse.from(appointment);
+    }
+
     @Transactional // may write on first call: generates and persists the bill lazily
     public BillResponse billFor(String appointmentNumber) {
         Bill bill = billingService.getByAppointmentNumber(appointmentNumber);

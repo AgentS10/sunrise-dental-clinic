@@ -96,7 +96,9 @@ public class AppointmentService {
     public Appointment cancel(String appointmentNumber) {
         Appointment appointment = findByAppointmentNumber(appointmentNumber);
         appointment.setStatus(AppointmentStatus.CANCELLED);
-        return appointmentRepository.save(appointment);
+        Appointment saved = appointmentRepository.save(appointment);
+        eventPublisher.publishAppointmentCancelled(saved);
+        return saved;
     }
 
     @Transactional(readOnly = true)

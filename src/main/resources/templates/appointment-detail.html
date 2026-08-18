@@ -34,10 +34,16 @@
         </dl>
 
         <div class="btn-row" style="margin-top:20px">
-            <form th:action="@{/appointments/{n}/bill(n=${appointment.appointmentNumber()})}" method="post" style="display:inline">
+            <form th:if="${appointment.status() != 'CANCELLED'}"
+                  th:action="@{/appointments/{n}/bill(n=${appointment.appointmentNumber()})}" method="post" style="display:inline">
                 <button type="submit" class="btn btn-primary">Calculate &amp; Print Bill</button>
             </form>
             <a th:href="@{/appointments/search}" class="btn btn-secondary">Back to Search</a>
+            <form th:if="${appointment.status() == 'SCHEDULED'}"
+                  th:action="@{/appointments/{n}/cancel(n=${appointment.appointmentNumber()})}" method="post" style="display:inline"
+                  onsubmit="return confirm('Cancel this appointment? The clinic team will be notified.');">
+                <button type="submit" class="btn btn-danger">Cancel Appointment</button>
+            </form>
         </div>
     </div>
 </div>
