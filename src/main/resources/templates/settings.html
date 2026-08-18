@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Settings - Sunrise Dental Clinic</title>
+    <th:block th:replace="~{fragments/nav :: favicon}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments/nav :: topbar}"></div>
+<div class="container">
+    <div class="page-header">
+        <h1>Settings</h1>
+        <p>Manage dentists and treatment types used throughout the clinic (admin only).</p>
+    </div>
+
+    <h3 style="color:var(--navy-900); margin-bottom:10px;">Dentists</h3>
+    <div class="card">
+        <table style="margin-bottom:18px">
+            <thead><tr><th>Name</th><th>Specialization</th><th>Contact</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+            <tr th:each="d : ${dentists}">
+                <td th:text="${d.name}"></td>
+                <td th:text="${d.specialization}"></td>
+                <td th:text="${d.contactNumber}"></td>
+                <td>
+                    <span class="badge" th:classappend="${d.active} ? 'badge-completed' : 'badge-cancelled'"
+                          th:text="${d.active} ? 'Active' : 'Inactive'"></span>
+                </td>
+                <td>
+                    <form th:action="@{/settings/dentists/{id}/toggle(id=${d.id})}" method="post">
+                        <button type="submit" class="btn btn-secondary" style="padding:4px 10px; font-size:0.78rem;"
+                                th:text="${d.active} ? 'Deactivate' : 'Activate'"></button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h4 style="color:var(--navy-900); margin-bottom:10px;">Add Dentist</h4>
+        <form th:action="@{/settings/dentists}" th:object="${dentistRequest}" method="post">
+            <div class="grid cols-3">
+                <div class="field">
+                    <label for="dName">Name</label>
+                    <input type="text" id="dName" th:field="*{name}" th:classappend="${#fields.hasErrors('name')} ? 'has-error'"/>
+                    <div class="error-text" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                </div>
+                <div class="field">
+                    <label for="dSpec">Specialization</label>
+                    <input type="text" id="dSpec" th:field="*{specialization}" th:classappend="${#fields.hasErrors('specialization')} ? 'has-error'"/>
+                    <div class="error-text" th:if="${#fields.hasErrors('specialization')}" th:errors="*{specialization}"></div>
+                </div>
+                <div class="field">
+                    <label for="dContact">Contact Number</label>
+                    <input type="text" id="dContact" th:field="*{contactNumber}" placeholder="0771234567" th:classappend="${#fields.hasErrors('contactNumber')} ? 'has-error'"/>
+                    <div class="error-text" th:if="${#fields.hasErrors('contactNumber')}" th:errors="*{contactNumber}"></div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Dentist</button>
+        </form>
+    </div>
+
+    <h3 style="color:var(--navy-900); margin-bottom:10px;">Treatment Types</h3>
+    <div class="card">
+        <table style="margin-bottom:18px">
+            <thead><tr><th>Name</th><th>Description</th><th>Fee (LKR)</th><th>Duration (min)</th></tr></thead>
+            <tbody>
+            <tr th:each="t : ${treatmentTypes}">
+                <td th:text="${t.name}"></td>
+                <td th:text="${t.description}"></td>
+                <td th:text="${#numbers.formatDecimal(t.fee, 1, 2)}"></td>
+                <td th:text="${t.estimatedDurationMinutes}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h4 style="color:var(--navy-900); margin-bottom:10px;">Add Treatment Type</h4>
+        <form th:action="@{/settings/treatment-types}" th:object="${treatmentRequest}" method="post">
+            <div class="grid cols-4">
+                <div class="field">
+                    <label for="tName">Name</label>
+                    <input type="text" id="tName" th:field="*{name}" th:classappend="${#fields.hasErrors('name')} ? 'has-error'"/>
+                    <div class="error-text" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                </div>
+                <div class="field">
+                    <label for="tDesc">Description</label>
+                    <input type="text" id="tDesc" th:field="*{description}"/>
+                </div>
+                <div class="field">
+                    <label for="tFee">Fee (LKR)</label>
+                    <input type="number" step="0.01" id="tFee" th:field="*{fee}" th:classappend="${#fields.hasErrors('fee')} ? 'has-error'"/>
+                    <div class="error-text" th:if="${#fields.hasErrors('fee')}" th:errors="*{fee}"></div>
+                </div>
+                <div class="field">
+                    <label for="tDuration">Duration (min)</label>
+                    <input type="number" id="tDuration" th:field="*{estimatedDurationMinutes}" th:classappend="${#fields.hasErrors('estimatedDurationMinutes')} ? 'has-error'"/>
+                    <div class="error-text" th:if="${#fields.hasErrors('estimatedDurationMinutes')}" th:errors="*{estimatedDurationMinutes}"></div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Treatment Type</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
