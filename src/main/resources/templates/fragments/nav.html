@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <!--/* Shared favicon set, included via th:replace in every page's <head>. */-->
+    <th:block th:fragment="favicon">
+        <link rel="icon" href="/img/favicon.svg" type="image/svg+xml"/>
+        <link rel="alternate icon" href="/img/favicon-32.png" type="image/png" sizes="32x32"/>
+        <link rel="alternate icon" href="/img/favicon-16.png" type="image/png" sizes="16x16"/>
+        <link rel="apple-touch-icon" href="/img/apple-touch-icon.png" sizes="180x180"/>
+        <meta name="theme-color" content="#0d9488"/>
+    </th:block>
+</head>
+<body>
+<div th:fragment="topbar" class="topbar no-print">
+    <div class="brand">
+        <img src="/img/favicon.svg" alt="Sunrise Dental Clinic logo" class="brand-logo"/>
+        <span>Sunrise Dental Clinic</span>
+    </div>
+    <nav>
+        <a th:href="@{/dashboard}">Menu</a>
+        <a th:href="@{/appointments/new}">Register</a>
+        <a th:href="@{/appointments/search}">Find Appointment</a>
+        <a sec:authorize="hasRole('ADMIN')" th:href="@{/reports}">Reports</a>
+        <a th:href="@{/help}">Help</a>
+        <span class="user-chip" sec:authentication="name">user</span>
+        <form th:action="@{/logout}" method="post" style="display:inline">
+            <button type="submit" id="btnLogout" class="logout-link">Logout</button>
+        </form>
+    </nav>
+</div>
+</body>
+</html>

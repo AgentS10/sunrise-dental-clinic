@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="'Appointment ' + ${appointment.appointmentNumber()}">Appointment</title>
+    <th:block th:replace="~{fragments/nav :: favicon}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments/nav :: topbar}"></div>
+<div class="container">
+    <div class="page-header">
+        <h1 th:text="'Appointment ' + ${appointment.appointmentNumber()}">Appointment</h1>
+        <p>
+            <span class="badge"
+                  th:classappend="${appointment.status() == 'SCHEDULED'} ? 'badge-scheduled' : (${appointment.status() == 'COMPLETED'} ? 'badge-completed' : 'badge-cancelled')"
+                  th:text="${appointment.status()}">STATUS</span>
+        </p>
+    </div>
+
+    <div class="alert alert-success" th:if="${successMessage}" th:text="${successMessage}"></div>
+
+    <div class="card">
+        <dl class="definition-list">
+            <dt>Patient Name</dt><dd th:text="${appointment.patientName()}"></dd>
+            <dt>Address</dt><dd th:text="${appointment.patientAddress()}"></dd>
+            <dt>Contact Number</dt><dd th:text="${appointment.patientContact()}"></dd>
+            <dt>Dentist</dt><dd th:text="${appointment.dentistName()}"></dd>
+            <dt>Treatment Type</dt><dd th:text="${appointment.treatmentType()}"></dd>
+            <dt>Date</dt><dd th:text="${appointment.appointmentDate()}"></dd>
+            <dt>Time</dt><dd th:text="${appointment.appointmentTime()}"></dd>
+            <dt th:if="${appointment.notes() != null and !appointment.notes().isEmpty()}">Notes</dt>
+            <dd th:if="${appointment.notes() != null and !appointment.notes().isEmpty()}" th:text="${appointment.notes()}"></dd>
+        </dl>
+
+        <div class="btn-row" style="margin-top:20px">
+            <form th:action="@{/appointments/{n}/bill(n=${appointment.appointmentNumber()})}" method="post" style="display:inline">
+                <button type="submit" class="btn btn-primary">Calculate &amp; Print Bill</button>
+            </form>
+            <a th:href="@{/appointments/search}" class="btn btn-secondary">Back to Search</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

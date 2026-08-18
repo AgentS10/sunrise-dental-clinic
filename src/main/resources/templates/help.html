@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Help - Sunrise Dental Clinic</title>
+    <th:block th:replace="~{fragments/nav :: favicon}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments/nav :: topbar}"></div>
+<div class="container">
+    <div class="page-header">
+        <h1>Help &amp; User Guide</h1>
+        <p>Step-by-step instructions for new front-desk staff.</p>
+    </div>
+
+    <div class="card">
+        <div class="help-step">
+            <div class="num">1</div>
+            <div><h4>Signing in</h4><p>Use the username and password issued by the clinic administrator on the login screen. Only authorized staff accounts can access the system.</p></div>
+        </div>
+        <div class="help-step">
+            <div class="num">2</div>
+            <div><h4>Registering a new appointment</h4><p>From the Main Menu choose <em>Register New Appointment</em>. Fill in the patient's name, address and contact number, then pick a dentist, treatment type, date and time. The system automatically rejects a time slot if the chosen dentist is already booked, and prevents booking a date/time in the past.</p></div>
+        </div>
+        <div class="help-step">
+            <div class="num">3</div>
+            <div><h4>Finding an appointment</h4><p>Choose <em>Display Appointment Details</em> and enter the appointment number shown to the patient at booking (format <code>APT-000001</code>). All stored details are displayed on one screen.</p></div>
+        </div>
+        <div class="help-step">
+            <div class="num">4</div>
+            <div><h4>Calculating and printing a bill</h4><p>Open the appointment, then click <em>Calculate &amp; Print Bill</em>. The system prices the visit automatically (returning patients with 3 or more completed visits receive a loyalty discount) and shows a printable receipt.</p></div>
+        </div>
+        <div class="help-step">
+            <div class="num">5</div>
+            <div><h4>Reports (administrators)</h4><p>Administrators can open <em>Reports</em> to view Daily Appointments, Revenue, or Dentist Workload for any date range - useful for end-of-day reconciliation and planning.</p></div>
+        </div>
+        <div class="help-step">
+            <div class="num">6</div>
+            <div><h4>Exiting the system</h4><p>Always choose <em>Logout</em> from the menu when you are finished, especially on a shared front-desk computer, so the session cannot be used by anyone else.</p></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

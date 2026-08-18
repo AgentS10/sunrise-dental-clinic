@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Find Appointment - Sunrise Dental Clinic</title>
+    <th:block th:replace="~{fragments/nav :: favicon}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments/nav :: topbar}"></div>
+<div class="container">
+    <div class="page-header">
+        <h1>Display Appointment Details</h1>
+        <p>Enter the appointment number to view full patient and visit information.</p>
+    </div>
+
+    <div class="alert alert-error" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+
+    <div class="card" style="max-width:480px">
+        <form th:action="@{/appointments/search}" method="post">
+            <div class="field">
+                <label for="appointmentNumber">Appointment Number</label>
+                <input type="text" id="appointmentNumber" name="appointmentNumber" placeholder="APT-000001" required/>
+            </div>
+            <button type="submit" id="btnSearchAppointment" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

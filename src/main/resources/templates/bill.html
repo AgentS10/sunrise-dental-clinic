@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="'Bill ' + ${bill.billNumber()}">Bill</title>
+    <th:block th:replace="~{fragments/nav :: favicon}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments/nav :: topbar}"></div>
+<div class="container">
+    <div class="page-header no-print">
+        <h1>Patient Bill / Receipt</h1>
+        <p>Review the calculated bill below, then print for the patient.</p>
+    </div>
+
+    <div class="card receipt">
+        <h2>Sunrise Dental Clinic</h2>
+        <p class="center" style="color:var(--muted); margin-top:0">Colombo, Sri Lanka</p>
+        <hr/>
+        <div class="line"><span>Bill No.</span><strong th:text="${bill.billNumber()}"></strong></div>
+        <div class="line"><span>Appointment No.</span><strong th:text="${bill.appointmentNumber()}"></strong></div>
+        <div class="line"><span>Patient</span><strong th:text="${bill.patientName()}"></strong></div>
+        <div class="line"><span>Dentist</span><strong th:text="${appointment.dentistName()}"></strong></div>
+        <div class="line"><span>Treatment</span><strong th:text="${appointment.treatmentType()}"></strong></div>
+        <div class="line"><span>Generated</span><strong th:text="${#temporals.format(bill.generatedAt(), 'dd MMM yyyy HH:mm')}"></strong></div>
+        <hr/>
+        <div class="line"><span>Consultation Fee</span><span th:text="'LKR ' + ${#numbers.formatDecimal(bill.consultationFee(), 1, 2)}"></span></div>
+        <div class="line"><span>Treatment Fee</span><span th:text="'LKR ' + ${#numbers.formatDecimal(bill.treatmentFee(), 1, 2)}"></span></div>
+        <div class="line" th:if="${bill.discountAmount().compareTo(T(java.math.BigDecimal).ZERO) > 0}">
+            <span th:text="'Discount (' + ${bill.pricingStrategyUsed()} + ')'"></span>
+            <span th:text="'- LKR ' + ${#numbers.formatDecimal(bill.discountAmount(), 1, 2)}"></span>
+        </div>
+        <hr/>
+        <div class="line total"><span>Total Payable</span><span th:text="'LKR ' + ${#numbers.formatDecimal(bill.totalAmount(), 1, 2)}"></span></div>
+        <hr/>
+        <p class="center" style="color:var(--muted); font-size:0.8rem">Pricing strategy applied: <span th:text="${bill.pricingStrategyUsed()}"></span></p>
+        <p class="center" style="color:var(--muted); font-size:0.78rem">Thank you for visiting Sunrise Dental Clinic. Wishing you a healthy smile!</p>
+    </div>
+
+    <div class="btn-row no-print" style="max-width:460px; margin:16px auto 0; justify-content:center">
+        <button onclick="window.print()" class="btn btn-primary">🖨 Print Receipt</button>
+        <a th:href="@{/appointments/{n}(n=${bill.appointmentNumber()})}" class="btn btn-secondary">Back to Appointment</a>
+    </div>
+</div>
+</body>
+</html>

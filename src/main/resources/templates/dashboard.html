@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Main Menu - Sunrise Dental Clinic</title>
+    <th:block th:replace="~{fragments/nav :: favicon}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments/nav :: topbar}"></div>
+<div class="container">
+    <div class="page-header">
+        <h1>Main Menu</h1>
+        <p>Welcome back, <span sec:authentication="name">staff</span>. Choose a function to get started.</p>
+    </div>
+
+    <div class="grid cols-3">
+        <a class="menu-tile" th:href="@{/appointments/new}">
+            <div class="icon">🗓️</div>
+            <h3>1. Register New Appointment</h3>
+            <p>Capture patient details and book a visit with a dentist.</p>
+        </a>
+        <a class="menu-tile" th:href="@{/appointments/search}">
+            <div class="icon">🔎</div>
+            <h3>2. Display Appointment Details</h3>
+            <p>Search by appointment number and view full details.</p>
+        </a>
+        <a class="menu-tile" th:href="@{/appointments/search}">
+            <div class="icon">🧾</div>
+            <h3>3. Calculate &amp; Print Bill</h3>
+            <p>Find an appointment, then generate and print its receipt.</p>
+        </a>
+        <a class="menu-tile" sec:authorize="hasRole('ADMIN')" th:href="@{/reports}">
+            <div class="icon">📊</div>
+            <h3>4. Reports</h3>
+            <p>Daily appointments, revenue and dentist workload reports.</p>
+        </a>
+        <a class="menu-tile" th:href="@{/help}">
+            <div class="icon">❓</div>
+            <h3>5. Help</h3>
+            <p>Step-by-step instructions for new staff.</p>
+        </a>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="menu-tile" style="width:100%; text-align:left; cursor:pointer; font-family:inherit;">
+                <div class="icon">🚪</div>
+                <h3>6. Exit / Logout</h3>
+                <p>Safely close your session on this workstation.</p>
+            </button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

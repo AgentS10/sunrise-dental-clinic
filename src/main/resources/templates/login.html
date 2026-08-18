@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Login - Sunrise Dental Clinic</title>
+    <th:block th:replace="~{fragments/nav :: favicon}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div class="login-wrap">
+    <div class="login-card">
+        <div class="brand">
+            <div class="dot"><img src="/img/favicon.svg" alt="Sunrise Dental Clinic logo"/></div>
+            <h1>Sunrise Dental Clinic</h1>
+            <div class="sub">Appointment &amp; Patient Management System</div>
+        </div>
+
+        <div class="alert alert-error" th:if="${param.error}">
+            Invalid username or password. Please try again.
+        </div>
+        <div class="alert alert-success" th:if="${param.logout}">
+            You have been logged out safely.
+        </div>
+
+        <form th:action="@{/login}" method="post">
+            <div class="field">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required autofocus/>
+            </div>
+            <div class="field">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required/>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%">Sign In</button>
+        </form>
+
+        <div class="demo-creds">
+            <strong>Demo accounts</strong> (seeded automatically):<br/>
+            Admin&#8201;&mdash;&#8201;username <code>admin</code> / password <code>Admin@123</code><br/>
+            Receptionist&#8201;&mdash;&#8201;username <code>reception</code> / password <code>Reception@123</code>
+        </div>
+    </div>
+</div>
+</body>
+</html>

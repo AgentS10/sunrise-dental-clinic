@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Reports - Sunrise Dental Clinic</title>
+    <th:block th:replace="~{fragments/nav :: favicon}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments/nav :: topbar}"></div>
+<div class="container">
+    <div class="page-header">
+        <h1>Reports</h1>
+        <p>Clinic-wide reports to support day-to-day decision making (admin only).</p>
+    </div>
+
+    <div class="card no-print">
+        <form th:action="@{/reports}" method="get">
+            <div class="grid cols-3">
+                <div class="field">
+                    <label for="type">Report Type</label>
+                    <select id="type" name="type">
+                        <option th:each="rt : ${reportTypes}" th:value="${rt}" th:text="${rt.displayName}"
+                                th:selected="${rt == selectedType}"></option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="from">From</label>
+                    <input type="date" id="from" name="from" th:value="${from}"/>
+                </div>
+                <div class="field">
+                    <label for="to">To</label>
+                    <input type="date" id="to" name="to" th:value="${to}"/>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Generate Report</button>
+        </form>
+    </div>
+
+    <div class="card" th:if="${result}">
+        <h3 th:text="${result.title()}"></h3>
+        <p style="color:var(--muted)" th:text="${result.summary()}"></p>
+        <table>
+            <thead>
+            <tr><th th:each="h : ${result.headers()}" th:text="${h}"></th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="row : ${result.rows()}">
+                <td th:each="cell : ${row}" th:text="${cell}"></td>
+            </tr>
+            <tr th:if="${result.rows().isEmpty()}">
+                <td th:attr="colspan=${result.headers().size()}" style="text-align:center;color:var(--muted)">No data for this period.</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="btn-row no-print" style="margin-top:16px">
+            <button onclick="window.print()" class="btn btn-secondary">🖨 Print Report</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Something Went Wrong - Sunrise Dental Clinic</title>
+    <th:block th:replace="~{fragments/nav :: favicon}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div class="login-wrap">
+    <div class="login-card" style="max-width:460px">
+        <div class="brand">
+            <div class="dot"><img src="/img/favicon.svg" alt="Sunrise Dental Clinic logo"/></div>
+            <h1 th:text="${status} == 403 ? 'Access Denied' : (${status} == 404 ? 'Page Not Found' : 'Something Went Wrong')">Error</h1>
+            <div class="sub" th:if="${status}" th:text="'HTTP ' + ${status} + (${error} != null ? ' - ' + ${error} : '')">Error</div>
+        </div>
+
+        <div class="alert alert-error" th:switch="${status}">
+            <span th:case="403">You're signed in, but your account role doesn't have permission to view that page. Reports are restricted to administrator accounts.</span>
+            <span th:case="404">The page or resource you asked for doesn't exist. Double-check the appointment number or link and try again.</span>
+            <span th:case="*">An unexpected error occurred while processing your request. Please try again, or contact the clinic administrator if the problem continues.</span>
+        </div>
+
+        <div class="btn-row" style="justify-content:center">
+            <a th:href="@{/dashboard}" class="btn btn-primary">Back to Main Menu</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
