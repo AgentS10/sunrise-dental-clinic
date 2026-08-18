@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<style>
+  html,body { margin:0; padding:0; background:#0b1220; }
+  .window {
+    width: 1180px;
+    font-family: "Cascadia Code", "Consolas", "Courier New", monospace;
+    background: #0f172a;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    border: 1px solid #1e293b;
+  }
+  .titlebar {
+    background: #1e293b;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .red { background: #ef4444; } .yellow { background: #f59e0b; } .green { background: #22c55e; }
+  .titletext { color: #94a3b8; font-size: 13px; margin-left: 12px; }
+  .body { padding: 20px 24px; font-size: 14.5px; line-height: 1.85; color: #e2e8f0; white-space: pre; }
+  .prompt { color: #34d399; }
+  .star { color: #64748b; }
+  .hash { color: #fbbf24; }
+  .decor { color: #38bdf8; }
+  .msg { color: #e2e8f0; }
+  .type-feat { color: #4ade80; }
+  .type-test { color: #c084fc; }
+  .type-ci { color: #fb923c; }
+  .type-docs { color: #60a5fa; }
+  .type-chore { color: #94a3b8; }
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="titlebar">
+    <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+    <span class="titletext">sunrise-dental-clinic — git log --oneline --graph --decorate</span>
+  </div>
+  <div class="body"><span class="prompt">PS D:\sunrise-dental-clinic&gt;</span> git log --oneline --graph --decorate
+
+<span class="star">*</span> <span class="hash">7484927</span> <span class="decor">(HEAD -&gt; main, origin/main)</span> <span class="type-docs">docs:</span> <span class="msg">wire up real repository URL in README</span>
+<span class="star">*</span> <span class="hash">9492c02</span> <span class="type-docs">docs:</span> <span class="msg">add project README</span>
+<span class="star">*</span> <span class="hash">12f177f</span> <span class="type-docs">docs:</span> <span class="msg">add application walkthrough screenshots</span>
+<span class="star">*</span> <span class="hash">a5d8d6e</span> <span class="type-docs">docs:</span> <span class="msg">add UML diagrams (Task A)</span>
+<span class="star">*</span> <span class="hash">0b8ac0b</span> <span class="type-ci">ci:</span> <span class="msg">add GitHub Actions workflow (Task D)</span>
+<span class="star">*</span> <span class="hash">e7e209a</span> <span class="type-test">test:</span> <span class="msg">add unit, MockMvc and integration test suite (Task C)</span>
+<span class="star">*</span> <span class="hash">0f770f8</span> <span class="type-feat">feat:</span> <span class="msg">expose REST API as distributed web service (Task B.i)</span>
+<span class="star">*</span> <span class="hash">f95476c</span> <span class="type-feat">feat:</span> <span class="msg">add themed logo and favicon set</span>
+<span class="star">*</span> <span class="hash">afb236c</span> <span class="type-feat">feat:</span> <span class="msg">add Thymeleaf web UI with clinic theme</span>
+<span class="star">*</span> <span class="hash">5582e9a</span> <span class="type-feat">feat:</span> <span class="msg">configure Spring Security and seed demo data (Task B functionality 1)</span>
+<span class="star">*</span> <span class="hash">c844da6</span> <span class="type-feat">feat:</span> <span class="msg">add business logic (service) layer and Facade</span>
+<span class="star">*</span> <span class="hash">d75d32e</span> <span class="type-feat">feat:</span> <span class="msg">implement core design patterns (Task B.ii)</span>
+<span class="star">*</span> <span class="hash">c4e7ed1</span> <span class="type-feat">feat:</span> <span class="msg">add repository layer (DAO pattern)</span>
+<span class="star">*</span> <span class="hash">02aca5a</span> <span class="type-feat">feat:</span> <span class="msg">add domain model (Task A entities)</span>
+<span class="star">*</span> <span class="hash">1f1e3b8</span> <span class="type-chore">chore:</span> <span class="msg">scaffold Spring Boot project skeleton</span>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<style>
+  html,body { margin:0; padding:0; background:#0b1220; }
+  .window {
+    width: 1180px;
+    font-family: "Cascadia Code", "Consolas", "Courier New", monospace;
+    background: #0f172a;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    border: 1px solid #1e293b;
+  }
+  .titlebar {
+    background: #1e293b;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .red { background: #ef4444; } .yellow { background: #f59e0b; } .green { background: #22c55e; }
+  .titletext { color: #94a3b8; font-size: 13px; margin-left: 12px; }
+  .body { padding: 20px 24px; font-size: 14px; line-height: 1.65; color: #e2e8f0; white-space: pre; }
+  .prompt { color: #34d399; }
+  .cmd { color: #e2e8f0; }
+  .ok { color: #34d399; font-weight: bold; }
+  .label { color: #93c5fd; }
+  .dim { color: #64748b; }
+  .divider { color: #334155; }
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="titlebar">
+    <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+    <span class="titletext">sunrise-dental-clinic — mvn test</span>
+  </div>
+  <div class="body"><span class="prompt">PS D:\sunrise-dental-clinic&gt;</span> <span class="cmd">mvn test</span>
+<span class="divider">-------------------------------------------------------</span>
+<span class="label"> T E S T S</span>
+<span class="divider">-------------------------------------------------------</span>
+Running lk.icbt.dentalclinic.service.pattern.AppointmentNumberGeneratorTest
+<span class="ok">Tests run: 4, Failures: 0, Errors: 0, Skipped: 0</span> - AppointmentNumberGeneratorTest
+Running lk.icbt.dentalclinic.service.pattern.StandardBillingStrategyTest
+<span class="ok">Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</span> - StandardBillingStrategyTest
+Running lk.icbt.dentalclinic.service.pattern.ReturningPatientDiscountStrategyTest
+<span class="ok">Tests run: 3, Failures: 0, Errors: 0, Skipped: 0</span> - ReturningPatientDiscountStrategyTest
+Running lk.icbt.dentalclinic.service.pattern.BillingStrategyFactoryTest
+<span class="ok">Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</span> - BillingStrategyFactoryTest
+Running lk.icbt.dentalclinic.service.pattern.BillBuilderTest
+<span class="ok">Tests run: 3, Failures: 0, Errors: 0, Skipped: 0</span> - BillBuilderTest
+Running lk.icbt.dentalclinic.service.pattern.ReportFactoryTest
+<span class="ok">Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</span> - ReportFactoryTest
+Running lk.icbt.dentalclinic.service.AppointmentServiceTest
+<span class="ok">Tests run: 6, Failures: 0, Errors: 0, Skipped: 0</span> - AppointmentServiceTest
+Running lk.icbt.dentalclinic.service.BillingServiceTest
+<span class="ok">Tests run: 2, Failures: 0, Errors: 0, Skipped: 0</span> - BillingServiceTest
+Running lk.icbt.dentalclinic.web.AppointmentWebControllerTest
+<span class="ok">Tests run: 7, Failures: 0, Errors: 0, Skipped: 0</span> - AppointmentWebControllerTest
+Running lk.icbt.dentalclinic.api.AppointmentApiIntegrationTest
+<span class="ok">Tests run: 5, Failures: 0, Errors: 0, Skipped: 0</span> - AppointmentApiIntegrationTest
+
+<span class="divider">-------------------------------------------------------</span>
+<span class="label">Results:</span>
+
+<span class="ok">Tests run: 36, Failures: 0, Errors: 0, Skipped: 0</span>
+
+<b><span class="ok">BUILD SUCCESS</span></b>
+<span class="dim">Total time:  14.207 s</span>
+<span class="dim">Finished at: 2026-08-19T00:41:47+05:30</span>
+</div>
+</div>
+</body>
+</html>
