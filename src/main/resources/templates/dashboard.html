@@ -47,6 +47,16 @@
                 <p>Safely close your session on this workstation.</p>
             </button>
         </form>
+        <a class="menu-tile" th:href="@{/notices}">
+            <div class="icon">📌</div>
+            <h3>Staff Noticeboard</h3>
+            <p>Post and read internal messages between clinic staff.</p>
+        </a>
+        <a class="menu-tile" sec:authorize="hasRole('ADMIN')" th:href="@{/settings}">
+            <div class="icon">⚙️</div>
+            <h3>Settings</h3>
+            <p>Manage dentists, treatment types and clinic configuration.</p>
+        </a>
     </div>
 </div>
 </body>

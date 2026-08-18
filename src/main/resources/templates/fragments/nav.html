@@ -20,8 +20,27 @@
         <a th:href="@{/dashboard}">Menu</a>
         <a th:href="@{/appointments/new}">Register</a>
         <a th:href="@{/appointments/search}">Find Appointment</a>
+        <a th:href="@{/notices}">Noticeboard</a>
         <a sec:authorize="hasRole('ADMIN')" th:href="@{/reports}">Reports</a>
+        <a sec:authorize="hasRole('ADMIN')" th:href="@{/settings}">Settings</a>
         <a th:href="@{/help}">Help</a>
+
+        <details class="notif-bell">
+            <summary>
+                🔔
+                <span class="notif-count" th:if="${staffNotificationCount != null and staffNotificationCount > 0}"
+                      th:text="${staffNotificationCount > 9 ? '9+' : staffNotificationCount}"></span>
+            </summary>
+            <div class="notif-dropdown">
+                <div class="notif-dropdown-header">Recent Activity</div>
+                <div class="notif-item" th:each="n : ${recentStaffNotifications}">
+                    <p th:text="${n.message}"></p>
+                    <span th:text="${#temporals.format(n.createdAt, 'dd MMM HH:mm')}"></span>
+                </div>
+                <p class="notif-empty" th:if="${recentStaffNotifications == null or recentStaffNotifications.isEmpty()}">No activity yet.</p>
+            </div>
+        </details>
+
         <span class="user-chip" sec:authentication="name">user</span>
         <form th:action="@{/logout}" method="post" style="display:inline">
             <button type="submit" id="btnLogout" class="logout-link">Logout</button>
