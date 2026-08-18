@@ -156,4 +156,17 @@ class AppointmentServiceTest {
 
         assertThat(result.getAppointmentNumber()).isEqualTo("APT-000001");
     }
+
+    @Test
+    void cancel_setsStatusCancelled_andPublishesCancellationEvent() {
+        Appointment appointment = Appointment.builder()
+                .appointmentNumber("APT-000001").status(AppointmentStatus.SCHEDULED).build();
+        when(appointmentRepository.findByAppointmentNumber("APT-000001")).thenReturn(Optional.of(appointment));
+        when(appointmentRepository.save(any(Appointment.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        Appointment result = appointmentService.cancel("APT-000001");
+
+        assertThat(result.getStatus()).isEqualTo(AppointmentStatus.CANCELLED);
+        verify(eventPublisher).publishAppointmentCancelled(result);
+    }
 }
