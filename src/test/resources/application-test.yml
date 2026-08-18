@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:dentalclinic-test;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+  h2:
+    console:
+      enabled: false
+
+clinic:
+  name: "Sunrise Dental Clinic"
+  consultation-fee: 1500.00
+
+logging:
+  level:
+    lk.icbt.dentalclinic: WARN
