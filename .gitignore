@@ -1,0 +1,27 @@
+# Build output
+target/
+*.class
+
+# Runtime data (H2 database files, logs) - never commit generated/local data
+data/
+logs/
+app.log
+
+# Node (screenshot/diagram tooling under docs/ only, not part of the app)
+node_modules/
+package-lock.json
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Playwright browsers cache marker (not committed; installed via npx)
+docs/.cache/

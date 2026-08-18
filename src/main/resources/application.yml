@@ -1,0 +1,40 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: sunrise-dental-clinic
+
+  datasource:
+    url: jdbc:h2:file:./data/dentalclinic;AUTO_SERVER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+
+  thymeleaf:
+    cache: false
+
+clinic:
+  name: "Sunrise Dental Clinic"
+  location: "Colombo, Sri Lanka"
+  consultation-fee: 1500.00
+
+logging:
+  level:
+    lk.icbt.dentalclinic: INFO
+  file:
+    name: logs/dentalclinic.log

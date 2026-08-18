@@ -1,0 +1,14 @@
+{
+  "name": "sunrise-dental-clinic-docs-tooling",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Node/Playwright tooling used to generate docs/screenshots and docs/diagrams for the assignment report. Not part of the Java application itself.",
+  "scripts": {
+    "screenshots": "node docs/capture-screenshots.js",
+    "icons": "node docs/generate-icons.js"
+  },
+  "devDependencies": {
+    "playwright": "^1.47.0"
+  },
+  "license": "UNLICENSED"
+}
