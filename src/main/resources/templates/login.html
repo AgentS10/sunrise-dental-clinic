@@ -2,42 +2,65 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Login - Sunrise Dental Clinic</title>
     <th:block th:replace="~{fragments/nav :: favicon}"></th:block>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body>
-<div class="login-wrap">
-    <div class="login-card">
-        <div class="brand">
-            <div class="dot"><img src="/img/favicon.svg" alt="Sunrise Dental Clinic logo"/></div>
-            <h1>Sunrise Dental Clinic</h1>
-            <div class="sub">Appointment &amp; Patient Management System</div>
-        </div>
-
-        <div class="alert alert-error" th:if="${param.error}">
-            Invalid username or password. Please try again.
-        </div>
-        <div class="alert alert-success" th:if="${param.logout}">
-            You have been logged out safely.
-        </div>
-
-        <form th:action="@{/login}" method="post">
-            <div class="field">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required autofocus/>
+<div class="login-split">
+    <div class="login-hero">
+        <div class="login-hero-inner">
+            <div class="brand">
+                <div class="dot"><img src="/img/favicon.svg" alt="Sunrise Dental Clinic logo"/></div>
+                <h1>Sunrise Dental Clinic</h1>
+                <div class="sub">Appointment &amp; Patient Management System</div>
             </div>
-            <div class="field">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required/>
-            </div>
-            <button type="submit" class="btn btn-primary" style="width:100%">Sign In</button>
-        </form>
+            <ul class="hero-features">
+                <li>✓ Book, search and bill appointments in seconds</li>
+                <li>✓ Real-time clinic activity &amp; staff noticeboard</li>
+                <li>✓ Role-based access with secure, hashed credentials</li>
+                <li>✓ Daily, revenue and workload reports for admins</li>
+            </ul>
+            <p class="hero-footnote">Colombo, Sri Lanka</p>
+        </div>
+    </div>
 
-        <div class="demo-creds">
-            <strong>Demo accounts</strong> (seeded automatically):<br/>
-            Admin&#8201;&mdash;&#8201;username <code>admin</code> / password <code>Admin@123</code><br/>
-            Receptionist&#8201;&mdash;&#8201;username <code>reception</code> / password <code>Reception@123</code>
+    <div class="login-form-panel">
+        <div class="login-card">
+            <h2 style="margin-top:0">Staff Sign In</h2>
+            <p class="sub" style="margin-bottom:22px">Enter your credentials to access the clinic system.</p>
+
+            <div class="alert alert-error" th:if="${param.error}">
+                Invalid username or password. Please try again.
+            </div>
+            <div class="alert alert-success" th:if="${param.logout}">
+                You have been logged out safely.
+            </div>
+
+            <form th:action="@{/login}" method="post">
+                <div class="field">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required autofocus autocomplete="username"/>
+                </div>
+                <div class="field">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required autocomplete="current-password"/>
+                </div>
+                <div class="login-options">
+                    <label class="remember-me">
+                        <input type="checkbox" name="remember-me" value="true" style="width:auto"/> Remember me for 14 days
+                    </label>
+                    <a href="#" tabindex="-1" class="forgot-link" title="Not implemented in this coursework build - a real deployment would email a reset link via the clinic administrator.">Forgot password?</a>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width:100%">Sign In</button>
+            </form>
+
+            <div class="demo-creds">
+                <strong>Demo accounts</strong> (seeded automatically):<br/>
+                Admin&#8201;&mdash;&#8201;username <code>admin</code> / password <code>Admin@123</code><br/>
+                Receptionist&#8201;&mdash;&#8201;username <code>reception</code> / password <code>Reception@123</code>
+            </div>
         </div>
     </div>
 </div>
